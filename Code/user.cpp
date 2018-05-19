@@ -2,7 +2,7 @@
 #define H 10000000000
 #define FILE "result.txt"
 #define LINES {
-		\
+		res[i]=arr1[i]+arr2[i];\
 		}
 #include<iostream>
 using namespace std;
@@ -11,7 +11,7 @@ int main()
 	int res[H-L];
 	for (int i=L;i<=H;i++)
 	{
-		res[i]=arr1[i]+arr2[i];
+		LINES
 	}
 	ofstream f;
 	f.open(FILE);
