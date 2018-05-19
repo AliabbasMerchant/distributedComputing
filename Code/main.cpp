@@ -13,9 +13,10 @@ int main()
     f.seekg(10);
     f>>l;
     cout<<l<<endl;
-    f.seekg(0);
-    f.seekg(22,ios::beg);
-    f>>h;
+    //f.seekg(0);
+    //f.seekg(22,ios::beg);
+    for(int k=1; k<=3 ;k++)// CODE 
+           f>>h;           //IMPROVISATION
     cout<<h<<endl;
     int x;
     cout<<"ENTER THE NUMBER OF SYSTEMS:";
