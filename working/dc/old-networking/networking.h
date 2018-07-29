@@ -13,8 +13,6 @@
 #include <fstream>
 #include<cstring>
 #include<cstdlib>
-#include <string>
-#include <sstream>
 using namespace std;
 
 //char ip_address[] = "172.16.100.61";
@@ -23,11 +21,11 @@ static int bail(const char *on_what)
     ////cout<<"Bail"<<endl;
 	if ( errno != 0 )
 	{
- 		fputs(strerror(errno), stderr);
- 		fputs(": ", stderr);
+// 		fputs(strerror(errno), stderr);
+// 		fputs(": ", stderr);
  	}
- 	fputs(on_what,stderr);
- 	fputc('\n',stderr);
+// 	fputs(on_what,stderr);
+// 	fputc('\n',stderr);
  	// exit(1);
     if(strcmp("bind(2)", on_what)==0)
         return 2;
@@ -50,19 +48,10 @@ int send_command(const char PORT[6], const char command[100], char ip_address[18
     else
      	strcpy(srvr_addr,"127.0.0.1");
 
-	s = socket(AF_INET,SOCK_STREAM,0);
+	s = socket(PF_INET,SOCK_STREAM,0);
 	if ( s == -1 ) {
-		//return bail("socket()");
-		bail("socket()");
+		return bail("socket()");
 	}
-	int reuse = 1;
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEADDR,(const char *)&reuse,sizeof(int))<0)
-		return bail("setsockopt(2)");
-	#ifdef SO_REUSEPORT
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEPORT,(const char *)&reuse,sizeof(int))<0)
-		bail("setsockopt(2)");
-	#endif
-	
 
 	memset(&adr_srvr,0,sizeof(adr_srvr));
 	adr_srvr.sin_family = AF_INET;
@@ -80,19 +69,11 @@ int send_command(const char PORT[6], const char command[100], char ip_address[18
 		adr_srvr.sin_addr.s_addr = INADDR_ANY ;
 	}
 	len_inet = sizeof(adr_srvr);
-	while(true) {
-    	z = bind(s,(struct sockaddr *)&adr_srvr,len_inet);
-    	if(z==-1) {
-    	    cout<<"Bail"<<endl;continue;
-    	}
-    	else {
-    	    break;
-	    }
+	z = bind(s,(struct sockaddr *)&adr_srvr,len_inet);
+	if ( z == -1 ) {
+		close(s);
+		return bail("bind(2)");
 	}
-	//if ( z == -1 ) {
-	//	close(s);
-	//	return bail("bind(2)");
-	//}
 	z = listen(s,10);
 	if ( z == -1 ) {
 		close(s);
@@ -145,21 +126,12 @@ string send_command(const char PORT[], const char command[], char ip_address[], 
     else
      	strcpy(srvr_addr,"127.0.0.1");
 
-    s = socket(AF_INET,SOCK_STREAM,0);
+	s = socket(PF_INET,SOCK_STREAM,0);
 	if ( s == -1 ) {
-		//return bail("socket()");
-		bail("socket()");
-	}
-	int reuse = 1;
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEADDR,(const char *)&reuse,sizeof(int))<0) {
-		bail("setsockopt(2)");
+		bail("Socket(2)");
 		return "ERROR";
 	}
-	#ifdef SO_REUSEPORT
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEPORT,(const char *)&reuse,sizeof(int))<0)
-		bail("setsockopt(2)");
-	#endif
-	
+
 	memset(&adr_srvr,0,sizeof(adr_srvr));
 	adr_srvr.sin_family = AF_INET;
 	adr_srvr.sin_port = htons(atoi(srvr_port));
@@ -177,21 +149,12 @@ string send_command(const char PORT[], const char command[], char ip_address[], 
 		adr_srvr.sin_addr.s_addr = INADDR_ANY ;
 	}
 	len_inet = sizeof(adr_srvr);
-	while(true) {
-    	z = bind(s,(struct sockaddr *)&adr_srvr,len_inet);
-    	if(z==-1) {
-    	    cout<<"Bail"<<endl;continue;
-    	}
-    	else {
-    	    break;
-	    }
+	z = bind(s,(struct sockaddr *)&adr_srvr,len_inet);
+	if ( z == -1 ) {
+		close(s);
+		bail("bind(2)");
+		return "ERROR";
 	}
-	//if ( z == -1 ) {
-	//	close(s);
-	//	bail("bind(2)");
-	//  return "ERROR";
-	//}
-	
 	z = listen(s,10);
 	if ( z == -1 ) {
 		close(s);
@@ -247,21 +210,12 @@ string receive_command(const char PORT[], char ip_address[])
     else
      	strcpy(srvr_addr,"127.0.0.1");
 
-	s = socket(AF_INET,SOCK_STREAM,0);
-	if ( s == -1 ) {
-		//return bail("socket()");
-		bail("socket()");
-	}
-	int reuse = 1;
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEADDR,(const char *)&reuse,sizeof(int))<0) {
-		bail("setsockopt(2)");
-		return "___";
-	}
-	#ifdef SO_REUSEPORT
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEPORT,(const char *)&reuse,sizeof(int))<0)
-		bail("setsockopt(2)");
-	#endif
-	
+	s = socket(PF_INET,SOCK_STREAM,0);
+ 	if ( s == -1 )
+    {
+ 		bail("socket()");
+        return "___";
+    }
  	memset(&adr_srvr,0,sizeof(adr_srvr));
  	adr_srvr.sin_family = AF_INET;
  	adr_srvr.sin_port = htons(atoi(srvr_port));
@@ -319,22 +273,11 @@ int obj_send(const char PORT1[], const char PORT2[], const char filename[], char
     else
      	strcpy(srvr_addr,"127.0.0.1");
 	//cout<<"trying to open socket"<<endl;
-	
-	
-	s = socket(AF_INET,SOCK_STREAM,0);
-	if ( s == -1 ) {
-		//return bail("socket()");
-		bail("socket()");
-	}
-	int reuse = 1;
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEADDR,(const char *)&reuse,sizeof(int))<0) {
-		return bail("setsockopt(2)");
-	}
-	#ifdef SO_REUSEPORT
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEPORT,(const char *)&reuse,sizeof(int))<0)
-		bail("setsockopt(2)");
-	#endif
-	
+	s = socket(PF_INET,SOCK_STREAM,0);
+	if ( s == -1 )
+    {
+        return bail("socket()");
+    }
 	memset(&adr_srvr,0,sizeof(adr_srvr));
 	adr_srvr.sin_family = AF_INET;
 	adr_srvr.sin_port = htons(atoi(srvr_port1));
@@ -352,21 +295,13 @@ int obj_send(const char PORT1[], const char PORT2[], const char filename[], char
 		adr_srvr.sin_addr.s_addr = INADDR_ANY ;
 	}
 	len_inet = sizeof(adr_srvr);
-	
-	while(true) {
-    	z = bind(s,(struct sockaddr *)&adr_srvr,len_inet);
-    	if(z==-1) {
-    	    cout<<"Bail"<<endl;continue;
-    	}
-    	else {
-    	    break;
-	    }
+	z = bind(s,(struct sockaddr *)&adr_srvr,len_inet);
+	if ( z == -1 )
+	{
+		close(s);
+		//cout<<"already in use"<<endl;
+		return bail("bind(2)");
 	}
-	//if ( z == -1 ) {
-	//	close(s);
-	//	return bail("bind(2)");
-	//}
-
 	z = listen(s,10);
 	if ( z == -1 )
     {
@@ -430,23 +365,11 @@ int obj_send(const char PORT1[], const char PORT2[], const char filename[], char
     else
      	strcpy(srvr_addr,"127.0.0.1");
 	//cout<<"trying to open socket"<<endl;
-	
-	
-	
-	s = socket(AF_INET,SOCK_STREAM,0);
-	if ( s == -1 ) {
-		//return bail("socket()");
-		bail("socket()");
-	}
-	int reuse2 = 1;
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEADDR,(const char *)&reuse2,sizeof(int))<0) {
-		return bail("setsockopt(2)");
-	}
-	#ifdef SO_REUSEPORT
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEPORT,(const char *)&reuse,sizeof(int))<0)
-		bail("setsockopt(2)");
-	#endif
-	
+	s = socket(PF_INET,SOCK_STREAM,0);
+	if ( s == -1 )
+    {
+        return bail("socket()");
+    }
 	memset(&adr_srvr,0,sizeof(adr_srvr));
 	adr_srvr.sin_family = AF_INET;
 	adr_srvr.sin_port = htons(atoi(srvr_port2));
@@ -463,21 +386,13 @@ int obj_send(const char PORT1[], const char PORT2[], const char filename[], char
 		adr_srvr.sin_addr.s_addr = INADDR_ANY ;
 	}
 	len_inet = sizeof(adr_srvr);
-	
-	while(true) {
-    	z = bind(s,(struct sockaddr *)&adr_srvr,len_inet);
-    	if(z==-1) {
-    	    cout<<"Bail"<<endl;continue;
-    	}
-    	else {
-    	    break;
-	    }
+	z = bind(s,(struct sockaddr *)&adr_srvr,len_inet);
+	if ( z == -1 )
+	{
+		close(s);
+		//cout<<"already in use"<<endl;
+		return bail("bind(2)");
 	}
-	//if ( z == -1 ) {
-	//	close(s);
-	//	return bail("bind(2)");
-	//}
-
 	z = listen(s,10);
 	if ( z == -1 )
     {
@@ -540,21 +455,11 @@ int obj_receive(const char PORT1[], const char PORT2[], char filename[], char ip
     	strcpy(srvr_addr,ip_address);
     else
      	strcpy(srvr_addr,"127.0.0.1");
-     	
-    s = socket(AF_INET,SOCK_STREAM,0);
-	if ( s == -1 ) {
-		//return bail("socket()");
-		bail("socket()");
-	}
-	int reuse = 1;
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEADDR,(const char *)&reuse,sizeof(int))<0) {
-		return bail("setsockopt(2)");
-	}
-	#ifdef SO_REUSEPORT
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEPORT,(const char *)&reuse,sizeof(int))<0)
-		bail("setsockopt(2)");
-	#endif
-	
+	s = socket(PF_INET,SOCK_STREAM,0);
+ 	if ( s == -1 )
+    {
+        return bail("socket()");
+    }
  	memset(&adr_srvr,0,sizeof(adr_srvr));
  	adr_srvr.sin_family = AF_INET;
  	adr_srvr.sin_port = htons(atoi(srvr_port1));
@@ -594,21 +499,11 @@ int obj_receive(const char PORT1[], const char PORT2[], char filename[], char ip
     	strcpy(srvr_addr,ip_address);
     else
      	strcpy(srvr_addr,"127.0.0.1");
-     	
-    s = socket(AF_INET,SOCK_STREAM,0);
-	if ( s == -1 ) {
-		//return bail("socket()");
-		bail("socket()");
-	}
-	int reuse2 = 1;
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEADDR,(const char *)&reuse2,sizeof(int))<0) {
-		return bail("setsockopt(2)");
-	}
-	#ifdef SO_REUSEPORT
-	if(setsockopt(s,SOL_SOCKET,SO_REUSEPORT,(const char *)&reuse,sizeof(int))<0)
-		bail("setsockopt(2)");
-	#endif
-	
+	s = socket(PF_INET,SOCK_STREAM,0);
+ 	if ( s == -1 )
+    {
+        return bail("socket()");
+    }
  	memset(&adr_srvr,0,sizeof(adr_srvr));
  	adr_srvr.sin_family = AF_INET;
  	adr_srvr.sin_port = htons(atoi(srvr_port1));

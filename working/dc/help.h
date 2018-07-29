@@ -14,7 +14,7 @@
 
 using namespace std;
 
-
+/*
 static inline void ltrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
         return !std::isspace(ch);
@@ -29,6 +29,7 @@ static inline void trim(std::string &s) {
     ltrim(s);
     rtrim(s);
 }
+*/
 
 int system(string command)
 {
