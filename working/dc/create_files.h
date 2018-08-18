@@ -186,28 +186,9 @@ void searchcif()
 		}
 
 		infile.getline(a, 500, '\n');
-		chars = strlen(a);                        /////////////*************NOOB GIRI HERE********///////////
-												  //cout << endl << ":" << a[5] << ":" << endl;
-												  /*while (flag)
-												  {
-
-												  for (l = chars; l >= 0; l--)
-												  {
-												  if (a[l] == ' ')
-												  {
-												  a[l] = '\0';
-												  }
-												  else
-												  {
-												  flag = false;
-												  break;
-												  }
-												  }
-												  }*/
-
+		chars = strlen(a);                        
 		str = a;
-		//std::cout<<"asjhdghjdgduhwvdyudvwyedweyudwe"<<chars<<endl;
-		//std::cout << str.c_str();
+		
 		int indexstart = str.find_first_of('(');
 		string print;
 		print = str.substr(0, indexstart);
@@ -231,18 +212,7 @@ void searchcif()
 				flag = false;
 				break;
 			}
-			/*for (int l = indexstart-1; l >= 0; l--)
-			{
-			if (b[l] == ' ')
-			{
-			b[l] = '\0';
-			}
-			else
-			{
-			flag = false;
-			break;
-			}
-			}*/
+			
 		}
 		for (z = y.begin(), l = 0; z != y.end(); z++, l++)
 		{
@@ -254,8 +224,7 @@ void searchcif()
 			//	cout << b[l];
 		}
 		strcpy(b, print.c_str());
-		//std::cout << endl << "after loop print is now " << endl;
-		//std::cout <<":" << print.c_str() << ":";
+		
 		//indexstart = print.find_last_of(' ' || '::');////////********action needed 1 ***********///////////
 		indexstart = string::npos;
 		int temp_index1 = 0;
@@ -287,24 +256,18 @@ void searchcif()
 		}
 
 		str = print.substr(indexstart + 1);
-		//std::cout << endl << "str.c_str() is   " << str.c_str() << endl;
 		cif_function_name.push_back(str);
 		pointpos += chars + 1;
-		//std::cout << "pointpos " << pointpos << endl;
-
 		int bracketstart = 0, bracketend = 0;
-
 		int flag = 1;
 		while (flag)
 		{
 			infile.get(c);
-			//std::cout << c;
 			++pointpos;
 			if (c == '{')
 			{
 				flag = 0;
 				bracketstart = pointpos;
-				//std::cout << pointpos;
 			}
 		}
 		int bracket = 1;
@@ -312,54 +275,18 @@ void searchcif()
 		while (bracket != 0)
 		{
 			infile.get(c);
-			//std::cout << c;
 			++pointpos;
 			if (c == '{')
 			{
 				++bracket;
-				//	std::cout << bracket;
-				//std::cout << pointpos;
 			}
-
-			/*if (c == 'r')
-			{
-			infile.get(c);
-			++pointpos;
-			if (c == 'e')
-			{
-			infile.get(c);
-			++pointpos;
-			if (c == 't')
-			{
-			infile.get(c);
-			++pointpos;
-			if (c == 'u')
-			{
-			infile.get(c);
-			++pointpos;
-			if (c == 'r')
-			{
-			infile.get(c);
-			++pointpos;
-			if (c == 'n')
-			{
-
-			return2 = pointpos + 1;             ////////////attention needed 2 //////////////
-			return1 = pointpos - 6;             ////////////attention needed 3 //////////////
-
-			}
-			}
-			}
-			}
-			}
-			}*/
 
 			int sentinel = 0;
 			int h = 0, k = 0;
 			char z[15] = "return";
 			h = strlen(z);
 
-			while (bracket != 0)     //(infile.eof() == 0)
+			while (bracket != 0)     
 			{
 				infile.get(c);
 				++pointpos;
@@ -387,8 +314,6 @@ void searchcif()
 					if (c == '}')
 					{
 						--bracket;
-						////std::cout << bracket;
-						//std::cout << pointpos;
 					}
 					if (bracket == 0)
 						break;
@@ -398,26 +323,11 @@ void searchcif()
 				if (c == '}')
 				{
 					--bracket;
-					////std::cout << bracket;
-					//std::cout << pointpos;
 				}
 			}
 
-
-			/*if (c == '}')
-			{
-			--bracket;
-			////std::cout << bracket;
-			////std::cout << pointpos;
-			}*/
-
 		}
-
-		//std::cout << "return1 " << return1;
-		//std::cout << "return2 " << return2;
-
 		sentinel_for = pointpos;
-		//std::cout << "sentinel_for = " << sentinel_for;
 	}
 	infile.close();
 	///////////////////////////////////////////////////////////////////
@@ -436,11 +346,7 @@ void searchcif()
 	}
 	cout << endl << "::printing cif_function_name::" << endl;
     strcpy(p_cif_name, cif_function_name[0].c_str());
-	/*for (u = cif_function_name.begin(); u != cif_function_name.end(); i++)
-	{
-	std::cout << (*u).c_str() << endl;
-
-	}*/
+	
 }
 
 int searchmain()
@@ -597,8 +503,6 @@ void searchloop()
 		strcpy(a, temp.c_str());
 		//char a[150] = "func";                               //////////////attention needed 4 ////////////////
 		h = strlen(a);
-		//std::cout << endl << "shit is gonna start" << endl;
-		//while (!(infile.eof()))
 		while ((infile.eof() == 0))
 		{
 			infile.get(c);
@@ -606,8 +510,6 @@ void searchloop()
 			sentinel = pointpos;
 			while (c == a[k] && sentinel == pointpos)
 			{
-				//std::cout << c << endl;
-				//std::cout << pointpos << endl;
 				if (((h - 1) == k) && c == a[(h - 1)])
 				{
 					infile.get(c);
@@ -615,7 +517,6 @@ void searchloop()
 					if (c == ' ')
 					{
 						pointer_begcif = sentinel - h;
-						//std::cout << "pointer_begcif  " << pointer_begcif << endl;
 						cif_call_start.push_back(pointer_begcif);
 						break;
 					}
@@ -623,13 +524,12 @@ void searchloop()
 					{
 						++entry_rb;
 						pointer_begcif = sentinel - h;
-						//std::cout << "pointer_begcif  " << pointer_begcif << endl;
 						cif_call_start.push_back(pointer_begcif);
 						break;
 					}
 					else
 
-						cout << "hey yo! wtf are you doin man noob giri   " << endl;
+						cout << "NOT FOUND" << endl;
 				}
 				++k;
 				infile.get(c);
@@ -641,7 +541,6 @@ void searchloop()
 
 			if (pointer_begcif != 0)
 			{
-				//std::cout << "inside rb system" << endl;
 				infile.get(c);
 				++pointpos;
 
@@ -666,7 +565,6 @@ void searchloop()
 					}
 					if (count_rb == 0)
 					{
-						//std::cout << "pointer no 8 is " << pointpos << endl;
 						cif_call_end.push_back(pointpos);
 						pointer_begcif = 0;
 					}
@@ -679,12 +577,10 @@ void searchloop()
 		}
 
 		sentinel_for = pointpos;
-		//std::cout << "sentinel_for = " << sentinel_for;
 		infile.close();
 		infile.open(user_file, ios::ate);
 		infile.seekg(0, ios::beg);
 	}
-	//std::cout << "pointer_begcif  " << pointer_begcif;
 	infile.close();
 	//////////////////////////////////////////////////////////////////////////////////////////
 	cout << "in searchloop";
@@ -720,7 +616,7 @@ ofstream f1, f2;
 char c[100], copy[100];
 int p[13], p_[13], p__[13], flag = 0, flagg = 0, i = 0, check = 0, checkk = 0, token = 0;
 
-//int generate_req_files();
+
 int generate_num_files() {
     char ch;
     int pos=-1;
