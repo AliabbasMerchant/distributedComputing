@@ -284,9 +284,7 @@ void searchcif()
 				++pointpos;
 				sentinel = pointpos;
 				while (c == z[k] && sentinel == pointpos)
-				{                                                     ////////////attention needed/////////////
-																	  //std::cout << c << endl;
-																	  //std::cout << pointpos << endl;
+				{
 					if ((h - 1) == k)
 					{
 						infile.get(c);
