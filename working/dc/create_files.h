@@ -142,7 +142,6 @@ void searchcif()
 		chars = chars + strlen(char_arr);
 		if ((strcmp(string(char_arr).substr(0, 10).c_str(), "// __CIF__")) == 0)
 		{
-			//std::cout << "found";
 			pointpos = chars + nxtline;
 
 			in.push_back(pointpos);
@@ -173,16 +172,11 @@ void searchcif()
 
 	for (int p = 0; p<x; ++p)
 	{
-		//std::cout << "before pointpos = in.back();" << pointpos << endl;
 		pointpos = in.back();
-
-		//std::cout << "after pointpos = in.back(); " << pointpos << endl;
 		in.pop_back();
-
 		for (int k = sentinel_for; k < pointpos; k++)
 		{
 			infile.get(ch);
-			//std::cout << ch;
 		}
 
 		infile.getline(a, 500, '\n');
@@ -193,7 +187,6 @@ void searchcif()
 		string print;
 		print = str.substr(0, indexstart);
 		strcpy(b, print.c_str());
-		//cout << endl << "before vector shit b is now:::: " << b;
 		for (l = 0; l < indexstart; l++)
 		{
 			y.push_back(b[l]);
@@ -218,7 +211,6 @@ void searchcif()
 		{
 			//cout<< *z;
 		}
-		//cout << endl << "after vector shit b is now            " << endl;
 		for (l = 0; l < 100; l++)
 		{
 			//	cout << b[l];
@@ -292,7 +284,7 @@ void searchcif()
 				++pointpos;
 				sentinel = pointpos;
 				while (c == z[k] && sentinel == pointpos)
-				{                                                     ////////////serious shit wrong over here/////////////
+				{                                                     ////////////attention needed/////////////
 																	  //std::cout << c << endl;
 																	  //std::cout << pointpos << endl;
 					if ((h - 1) == k)
@@ -435,7 +427,7 @@ void searchloop()
 	infile.open(user_file, ios::ate);
 	infile.seekg(0, ios::beg);
 
-	//std::reverse(begin(loop_start), end(loop_start));
+	
 	std::reverse(begin(in1), end(in1));
 	int sentinel_for = 0;
 
@@ -451,15 +443,11 @@ void searchloop()
 	char a[150];
 	for (int p = 0; p < x; ++p)
 	{
-		//std::cout << "before pointpos = in.back();" << pointpos;
 		pointpos = in1.back();
-		//std::cout << "after pointpos = in.back(); " << pointpos;
 		in1.pop_back();                                                     /////////////////////////////ATTENTION NEEDED////////////////////
 		for (int t = 0; t < pointpos; t++)
 		{
 			infile.get(c);
-
-			//std::cout << c;
 		}
 
 		/////////////////////////////////////////////////////////
@@ -570,9 +558,6 @@ void searchloop()
 					}
 					entry_rb = 0;
 				}
-
-				//std::cout << "start_rb = " << start_rb << endl;          /////////////shit is wrong////////////
-				//std::cout << "end_rb = " << end_rb << endl;
 			}
 		}
 
@@ -743,10 +728,8 @@ int calc_pointers()
 		dump.push_back(((*u) * 10) + 4);
 	}
 	dump.push_back((main_args * 10) + 5);
-	//dump.push_back(zero_pointer);
 	std::sort(dump.begin(), dump.end(), std::greater<int>());
-    cout<<"main_args = "<<main_args<<endl;
-	cout << "ksjdguwegdeduwegbdwdgeudwehdwgeyhdwfedywfgedyjwevdghwedgwe " << endl;
+        cout<<"main_args = "<<main_args<<endl;
 	
     
     cout<<"**********************************************************FOUND: "<<endl;
